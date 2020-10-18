@@ -37,6 +37,25 @@ def returndata(request):
     else:
         objs={'obj':obj,'loginuser':str(request.user),'u_prof':u_prof}
     return render(request,'index.html',objs)
+def follow_data(request):
+    people_obj=People.objects.all()
+    obj_fol=follow.objects.all()
+    cmt_user=comments.objects.all()
+    obj=[]
+    f=follow.objects.get(id=request.user.id)
+    for i in people_obj: 
+        if i.users in f.followed_users():
+            obj.append(i)
+    u_prof={}
+    obj=obj[::-1]
+    for i in obj_fol:
+        u_prof[i.user]=i
+    if request.user.is_authenticated:
+        fs=get_object_or_404(follow,user=request.user)
+        objs={'obj':obj,'loginuser':str(request.user),'fs':fs,'u_prof':u_prof,'cmt_user':cmt_user}
+    else:
+        objs={'obj':obj,'loginuser':str(request.user),'u_prof':u_prof}
+    return render(request,'index.html',objs)
 def storingdata(request):
     #obj=People.objects.get()
     username=str(request.user)
@@ -97,7 +116,9 @@ def signup(request):
                 return redirect(reverse('sign-up'))
             u=User.objects.create_user(**form.cleaned_data)
             form1=form1.cleaned_data
+            form=form.cleaned_data
             follow.objects.create(user=u,profile=form1['profile'],description=form1['description'])
+            People.objects.create(username=form['username'],users=u,profile=form1['profile'],description=form1['description'])
             return HttpResponseRedirect(reverse('login'))
     content={'forms':form,'form1':form1}
     return render(request,'signup.html',content)
@@ -158,7 +179,7 @@ def follows(request,pk):
     ob=get_object_or_404(People,id=pk)
     f1=get_object_or_404(follow,user=ob.users)
     f2=get_object_or_404(follow,user=request.user)
-    print(f2.followed_users(),f1.user)
+    #print(f2.followed_users(),f1.user)
     if not f1.user in f2.followed_users():
         #print("added")
         f2.following_users.add(f1.user)
@@ -185,6 +206,7 @@ def profiles(request,pk):
     ob=get_object_or_404(People,id=pk)
     fs=get_object_or_404(follow,user=request.user)
     f2=get_object_or_404(follow,user=ob.users)
+    #print(ob.users == f2.user)
     obj={
         'fs':fs,
         'ob':ob,
