@@ -42,7 +42,7 @@ def follow_data(request):
     obj_fol=follow.objects.all()
     cmt_user=comments.objects.all()
     obj=[]
-    f=follow.objects.get(id=request.user.id)
+    f=follow.objects.get(user=request.user)
     for i in people_obj: 
         if i.users in f.followed_users():
             obj.append(i)

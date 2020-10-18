@@ -93,8 +93,8 @@
         {% for cmt in cmt_user %}
         {% if i == cmt.post %}
           <div class="card-body" style="margin:0em">
-              <h5 class="card-title d-inline">{{cmt.user}}:</h5>
-                  <p class="card-text d-inline">{{cmt.comment}}</p>
+            <a href='{% url 'listing' cmt.user %}'><h5 class="card-title d-inline">{{cmt.user}}:</h5></a>
+                  <p class="card-text d-inline">{{cmt.comment}}&nbsp({{cmt.comment_date}})</p>
           </div>
           {% endif %}
           {% endfor %}
