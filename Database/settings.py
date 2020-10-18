@@ -26,7 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = '%yu%(=*^u8us)td8314wv$m#&3co)u8744zatv$zkjd_-57%=n'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG=False
+DEBUG=True
 #ALLOWED_HOSTS = []
 ALLOWED_HOSTS = ['picsagram-app.herokuapp.com']
 
