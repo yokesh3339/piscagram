@@ -7,7 +7,7 @@ from django.shortcuts import render,redirect,get_object_or_404
 from django.http import HttpResponse
 from .models import People,follow,comments
 import json
-from random import randint
+from random import shuffle
 import random
 import cloudinary
 import cloudinary.uploader
@@ -27,6 +27,7 @@ def returndata(request):
     obj=People.objects.all()
     obj_fol=follow.objects.all()
     cmt_user=comments.objects.all()
+    obj=obj.order_by('?')
     u_prof={}
     obj=obj[::-1]
     for i in obj_fol:
@@ -195,8 +196,11 @@ def follows(request,pk):
         is_follow=False
         #print("remove",f2.following_users.all())
     resp={
-        'followers':is_follow
+        'followers':is_follow,
+        'active_user':str(request.user),
+        'followers_counts_active':f1.followers_count()
         }
+    print(f2.followers_count())
     response1=json.dumps(resp)
 
     return HttpResponse(response1,content_type="application/json")
@@ -228,4 +232,3 @@ def comment_post(request,pk):
     else:
         comments.objects.create(post=obj_post,user=request.user,comment=cmt)
     return HttpResponseRedirect(reverse('data'))
-    

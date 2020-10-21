@@ -99,10 +99,10 @@
           {% endif %}
           {% endfor %}
         </div>
-      <form method='POST' action='{% url 'comment' i.pk %}' method="POST" id='form{{i.pk}}'>
+      <form method='POST' action='{% url 'comment' i.pk %}' method="POST" id='form{{i.pk}}' class="commenting" data-catid='{{i.pk}}'>
       {% csrf_token %}
         <div class="form-group">
-            <label for="message-text" class="col-form-label">Comment:{{i.pk}}</label>
+            <label for="message-text" class="col-form-label">Comment Here:</label>
             <textarea class="form-control" id="message-text" name="comments_by_user"></textarea>
           </div>
           <!--{% for cmt in cmt_user %}
