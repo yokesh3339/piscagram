@@ -5,7 +5,7 @@ from django.shortcuts import render,redirect,get_object_or_404
 from cloudinary.models import CloudinaryField
 # Create your models here.
 class People(models.Model):
-    username=models.CharField(max_length=50)
+    username=models.CharField(max_length=10)
     #firstname=models.CharField(max_length=50)
     #lastname=models.CharField(max_length=50)
     users=models.ForeignKey(User,on_delete=models.CASCADE)
@@ -40,6 +40,7 @@ class People(models.Model):
         u=User.objects.all()
         lis=[str(i) for i in u]
         return lis
+""" user profile model"""
 class follow(models.Model):
     user=models.OneToOneField(User,on_delete=models.CASCADE)
     followers_users=models.ManyToManyField(User,related_name='followers',blank=True)

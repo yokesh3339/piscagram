@@ -29,7 +29,7 @@ def returndata(request):
     cmt_user=comments.objects.all()
     obj=obj.order_by('?')
     u_prof={}
-    obj=obj[::-1]
+    #obj=obj[::-1]
     for i in obj_fol:
         u_prof[i.user]=i
     if request.user.is_authenticated:
@@ -205,7 +205,6 @@ def follows(request,pk):
 
     return HttpResponse(response1,content_type="application/json")
 
-
 def profiles(request,pk):
     ob=get_object_or_404(People,id=pk)
     fs=get_object_or_404(follow,user=request.user)
@@ -232,3 +231,5 @@ def comment_post(request,pk):
     else:
         comments.objects.create(post=obj_post,user=request.user,comment=cmt)
     return HttpResponseRedirect(reverse('data'))
+def discover(request):
+    return render(request,'discover.html')
