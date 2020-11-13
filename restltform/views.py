@@ -30,7 +30,7 @@ def returndata(request):
     obj=obj.order_by('?')
     u_prof={}
     #obj=obj[::-1]
-    print(request.user.get_full_name())
+    #print(request.user.get_full_name())
     for i in obj_fol:
         u_prof[i.user]=i
     if request.user.is_authenticated:
