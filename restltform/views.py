@@ -252,16 +252,19 @@ def discover(request):
 def search(request,hashtag):
     objs=People.objects.all()
     fs=get_object_or_404(follow,user=request.user)
+    cmt_user=comments.objects.all()
     obj=[]
     hashtag='#'+ hashtag.lower()
     print(hashtag)
     for iter_obj in objs:
-        print(iter_obj.description)
+        #print(iter_obj.description)
         if hashtag in iter_obj.description:
             obj.append(iter_obj)
+    for cmt in cmt_user:
+        if hashtag in cmt.comment:
+            obj.append(cmt.post)
     u_prof={}
     obj_fol=follow.objects.all()
-    cmt_user=comments.objects.all()
     for i in obj_fol:
         u_prof[i.user]=i
     objs={'obj':obj,'loginuser':str(request.user),'fs':fs,'u_prof':u_prof,'cmt_user':cmt_user}
