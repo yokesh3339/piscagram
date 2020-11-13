@@ -78,11 +78,12 @@ def sepcificview(request,my_id):
     obj=[obj]
     obj_fol=follow.objects.all()
     u_prof={}
+    cmt_user=comments.objects.all()
     for i in obj_fol:
         u_prof[i.user]=i
     if request.user.is_authenticated:
         fs=get_object_or_404(follow,user=request.user)
-        contents={'obj':obj,'fs':fs,'u_prof':u_prof}
+        contents={'obj':obj,'fs':fs,'u_prof':u_prof,'cmt_user':cmt_user}
     else:
         contents={'obj':obj,'u_prof':u_prof}
     return render(request,'index.html',contents)
@@ -230,6 +231,42 @@ def comment_post(request,pk):
         
     else:
         comments.objects.create(post=obj_post,user=request.user,comment=cmt)
+    
     return HttpResponseRedirect(reverse('data'))
 def discover(request):
-    return render(request,'discover.html')
+    #from django.core.files.storage import FileSystemStorage
+    """from ritetag import RiteTagApi
+    access_token = 'cb5dec5db4435452ca5812e49d4d46385e14fb2eaa81'
+    client = RiteTagApi(access_token)
+    def limit_80_percentage_reached(limit):
+        message = 'Used {}% of API credits. The limit resets on {}'.format(limit.usage, limit.reset)
+        print(message)
+    client.on_limit(80, limit_80_percentage_reached)
+    stats = client.hashtag_suggestion_for_image('http://res.cloudinary.com/yokesh234/image/upload/v1603177862/elbz24tunyycd9zjprse.jpg')
+    for ht in stats:
+        print(ht.hashtag,end="  ")"""
+    obj=People.objects.all()
+    obj=obj.order_by('?')
+    obj={'obj':obj}
+    return render(request,'discover.html',obj)
+def search(request,hashtag):
+    objs=People.objects.all()
+    fs=get_object_or_404(follow,user=request.user)
+    obj=[]
+    hashtag='#'+ hashtag.lower()
+    print(hashtag)
+    for iter_obj in objs:
+        print(iter_obj.description)
+        if hashtag in iter_obj.description:
+            obj.append(iter_obj)
+    u_prof={}
+    obj_fol=follow.objects.all()
+    cmt_user=comments.objects.all()
+    for i in obj_fol:
+        u_prof[i.user]=i
+    objs={'obj':obj,'loginuser':str(request.user),'fs':fs,'u_prof':u_prof,'cmt_user':cmt_user}
+    print(obj)
+    return render(request,'index.html',objs)
+
+
+

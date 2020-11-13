@@ -32,7 +32,8 @@ from restltform.views import (
     profiles,
     comment_post,
     follow_data,
-    discover
+    discover,
+    search
     )
 
 urlpatterns = [
@@ -51,7 +52,8 @@ urlpatterns = [
     path('profiles/<int:pk>',profiles,name="profiles"),
     path('comment/<int:pk>',comment_post,name="comment"),
     path('followsdata',follow_data,name="followsdata"),
-    path('new',discover,name="new")
+    path('new-dis',discover,name="new-dis"),
+    path('search/<str:hashtag>',search,name="search")
     
 ]
 #urlpatterns=urlpatterns+static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)

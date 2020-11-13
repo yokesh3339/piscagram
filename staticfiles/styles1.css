@@ -27,11 +27,11 @@ body{
 .als{
     margin-left: auto;
 }
-
+  /* Create two equal columns that sits next to each other */
 .navs{
     
     border: 5px solid rgb(20, 19, 20);
-    border-width: 0.8rem;
+    border-width: 0.4rem;
     border-radius: 2em;
     max-width: 500px;
     margin: 0.5em;
