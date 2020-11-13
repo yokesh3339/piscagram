@@ -261,14 +261,14 @@ def search(request,hashtag):
         if hashtag in iter_obj.description:
             obj.append(iter_obj)
     for cmt in cmt_user:
-        if hashtag in cmt.comment:
+        if hashtag in cmt.comment and cmt.post not in obj:
             obj.append(cmt.post)
     u_prof={}
     obj_fol=follow.objects.all()
     for i in obj_fol:
         u_prof[i.user]=i
     objs={'obj':obj,'loginuser':str(request.user),'fs':fs,'u_prof':u_prof,'cmt_user':cmt_user}
-    print(obj)
+    #print(obj)
     return render(request,'index.html',objs)
 
 
