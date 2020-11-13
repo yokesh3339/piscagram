@@ -30,6 +30,7 @@ def returndata(request):
     obj=obj.order_by('?')
     u_prof={}
     #obj=obj[::-1]
+    print(request.user.get_full_name())
     for i in obj_fol:
         u_prof[i.user]=i
     if request.user.is_authenticated:
@@ -69,6 +70,7 @@ def storingdata(request):
             form=form.cleaned_data
             form['users']=request.user
             #form['profile']=profile['url']
+            print(form)
             People.objects.create(**form)
             return HttpResponseRedirect(reverse('data'))
     content={'forms':form}
@@ -130,7 +132,7 @@ def login(request):
         form=loginform(request.POST)
         if form.is_valid():
             user=auth.authenticate(**form.cleaned_data)
-            #print(user,form.cleaned_data)
+            print(user,form.cleaned_data)
             if user:
                 auth.login(request,user)
                 return HttpResponseRedirect(reverse('data'))
@@ -211,13 +213,16 @@ def profiles(request,pk):
     fs=get_object_or_404(follow,user=request.user)
     f2=get_object_or_404(follow,user=ob.users)
     #print(ob.users == f2.user)
+    user_post=People.objects.filter(users=ob.users)
+    print(user_post)
     obj={
         'fs':fs,
         'ob':ob,
         'f1':str(ob.username),
-        'f2':f2
+        'f2':f2,
+        'user_post':user_post
     }
-    return render(request,'profile.html',obj)
+    return render(request,'profile1.html',obj)
 def comment_post(request,pk):
     cmt=request.POST['comments_by_user']
     obj_post=get_object_or_404(People,id=pk)

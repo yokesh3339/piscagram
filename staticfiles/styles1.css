@@ -46,6 +46,14 @@ body{
     width: 100%;
 }
 
+.dis{
+    
+    
+    border-width: 0.4rem;
+    border-radius: 2em;
+    width: 33.3%;
+}
+
 img{
     width: 400px;
     height:400px;
@@ -55,7 +63,16 @@ img{
     transition: all 0.5s;
     width: 90%;
 }
-
+.img-dis{
+    width: 400px;
+    height:400px;
+    margin: 10px;
+    float: center;
+    cursor: pointer;
+    transition: all 0.5s;
+    width: 90%;
+    height: 90%;
+}
 
 
 .btn{
