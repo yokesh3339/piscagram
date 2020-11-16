@@ -28,7 +28,7 @@ class follow(models.Model):
         my_followers=self.followers_users.all().count()
         return my_followers
 class People(models.Model):
-    username=models.CharField(max_length=50)
+    username=models.CharField(max_length=20)
     #firstname=models.CharField(max_length=50)
     #lastname=models.CharField(max_length=50)
     users=models.ForeignKey(User,on_delete=models.CASCADE)
@@ -38,7 +38,7 @@ class People(models.Model):
     likes=models.BooleanField(default=False)
     no_down=models.IntegerField(default=0,blank=True)
     likes_users=models.ManyToManyField(User,related_name='blog_post',blank=True)
-    #follow=models.ForeignKey(follow,related_name="follow",on_delete=models.CASCADE)
+    follow=models.ForeignKey(follow,related_name="follow",on_delete=models.CASCADE)
     def __str__(self):
         return str(self.pk) + " | " + self.username 
     def get_absolute_url(self):
@@ -71,11 +71,6 @@ class comments(models.Model):
     comment_date=models.DateTimeField(auto_now_add=True)
     def __str__(self):
         return str(self.pk)+" | " + str(self.post) + " | " + str(self.user)
-"""
-class profile_link(models.Model):
-    people=models.ForeignKey(People,on_delete=models.CASCADE)
-    profile=models.ForeignKey(follow,on_delete=models.CASCADE)
-"""
     
 
     
