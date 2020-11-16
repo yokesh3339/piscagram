@@ -12,7 +12,7 @@ class follow(models.Model):
     description=models.TextField(max_length=100,blank=True,null=True,default="No Description Available")
     #profile=models.ImageField(upload_to='profiles',blank=True,default="profiles/default.jpg")
     profile=CloudinaryField('profile_image')
-    #suggested_tag=models.TextField(blank=True,null=True)
+    suggested_tag=models.TextField(blank=True,null=True)
     def __str__(self):
         return str(self.pk) + " | " + str(self.user) 
     def followed_users(self):
@@ -28,7 +28,7 @@ class follow(models.Model):
         my_followers=self.followers_users.all().count()
         return my_followers
 class People(models.Model):
-    username=models.CharField(max_length=10)
+    username=models.CharField(max_length=20)
     #firstname=models.CharField(max_length=50)
     #lastname=models.CharField(max_length=50)
     users=models.ForeignKey(User,on_delete=models.CASCADE)
@@ -38,7 +38,7 @@ class People(models.Model):
     likes=models.BooleanField(default=False)
     no_down=models.IntegerField(default=0,blank=True)
     likes_users=models.ManyToManyField(User,related_name='blog_post',blank=True)
-    #follow=models.ForeignKey(follow,related_name="follow",on_delete=models.CASCADE,default=1)
+    follow=models.ForeignKey(follow,related_name="follow",on_delete=models.CASCADE,default=1)
     def __str__(self):
         return str(self.pk) + " | " + self.username 
     def get_absolute_url(self):
