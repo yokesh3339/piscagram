@@ -12,7 +12,7 @@ class follow(models.Model):
     description=models.TextField(max_length=100,blank=True,null=True,default="No Description Available")
     #profile=models.ImageField(upload_to='profiles',blank=True,default="profiles/default.jpg")
     profile=CloudinaryField('profile_image')
-    suggested_tag=models.TextField(blank=True,null=True)
+    suggested_tag=models.TextField(blank=True,null=True,default="running")
     def __str__(self):
         return str(self.pk) + " | " + str(self.user) 
     def followed_users(self):
