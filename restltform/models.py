@@ -38,7 +38,7 @@ class People(models.Model):
     likes=models.BooleanField(default=False)
     no_down=models.IntegerField(default=0,blank=True)
     likes_users=models.ManyToManyField(User,related_name='blog_post',blank=True)
-    follow=models.ForeignKey(follow,on_delete=models.CASCADE)
+    follow=models.ForeignKey(follow,on_delete=models.CASCADE,default=1)
     def __str__(self):
         return str(self.pk) + " | " + self.username 
     def get_absolute_url(self):
