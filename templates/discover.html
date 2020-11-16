@@ -3,7 +3,7 @@
 <div class="container">
     {% for i in obj %}
         <div class="dis">
-          <a href="{% url 'specific-view' i.pk %}">  <img src={{i.profile.url}} alt="no_img" class="img-dis rounded shadow-sm "> </a>
+          <a href="{% url 'suggest_discover' i.pk %}">  <img src={{i.profile.url}} alt="no_img" class="img-dis rounded shadow-sm "> </a>
 
        <!--<form method="POST" enctype="multipart/form-data">
         {% csrf_token %}

@@ -4,8 +4,31 @@ from django.contrib.auth.models import User,auth,AbstractUser
 from django.shortcuts import render,redirect,get_object_or_404
 from cloudinary.models import CloudinaryField
 # Create your models here.
+""" user profile model"""
+class follow(models.Model):
+    user=models.OneToOneField(User,on_delete=models.CASCADE)
+    followers_users=models.ManyToManyField(User,related_name='followers',blank=True)
+    following_users=models.ManyToManyField(User,related_name='followings',blank=True)
+    description=models.TextField(max_length=100,blank=True,null=True,default="No Description Available")
+    #profile=models.ImageField(upload_to='profiles',blank=True,default="profiles/default.jpg")
+    profile=CloudinaryField('profile_image')
+    suggested_tag=models.TextField(blank=True,null=True)
+    def __str__(self):
+        return str(self.pk) + " | " + str(self.user) 
+    def followed_users(self):
+        my_followers=self.following_users.all()
+        return my_followers
+    def followers(self):
+        my_followers=self.followers_users.all()
+        return my_followers
+    def followed_users_count(self):
+        my_followers=self.following_users.all().count()
+        return my_followers
+    def followers_count(self):
+        my_followers=self.followers_users.all().count()
+        return my_followers
 class People(models.Model):
-    username=models.CharField(max_length=10)
+    username=models.CharField(max_length=50)
     #firstname=models.CharField(max_length=50)
     #lastname=models.CharField(max_length=50)
     users=models.ForeignKey(User,on_delete=models.CASCADE)
@@ -15,6 +38,7 @@ class People(models.Model):
     likes=models.BooleanField(default=False)
     no_down=models.IntegerField(default=0,blank=True)
     likes_users=models.ManyToManyField(User,related_name='blog_post',blank=True)
+    follow=models.ForeignKey(follow,on_delete=models.CASCADE)
     def __str__(self):
         return str(self.pk) + " | " + self.username 
     def get_absolute_url(self):
@@ -40,28 +64,6 @@ class People(models.Model):
         u=User.objects.all()
         lis=[str(i) for i in u]
         return lis
-""" user profile model"""
-class follow(models.Model):
-    user=models.OneToOneField(User,on_delete=models.CASCADE)
-    followers_users=models.ManyToManyField(User,related_name='followers',blank=True)
-    following_users=models.ManyToManyField(User,related_name='followings',blank=True)
-    description=models.TextField(max_length=100,blank=True,null=True,default="No Description Available")
-    #profile=models.ImageField(upload_to='profiles',blank=True,default="profiles/default.jpg")
-    profile=CloudinaryField('profile_image')
-    def __str__(self):
-        return str(self.pk) + " | " + str(self.user) 
-    def followed_users(self):
-        my_followers=self.following_users.all()
-        return my_followers
-    def followers(self):
-        my_followers=self.followers_users.all()
-        return my_followers
-    def followed_users_count(self):
-        my_followers=self.following_users.all().count()
-        return my_followers
-    def followers_count(self):
-        my_followers=self.followers_users.all().count()
-        return my_followers
 class comments(models.Model):
     post=models.ForeignKey(People,related_name='comment_user',on_delete=models.CASCADE)
     user=models.ForeignKey(User,related_name='user',on_delete=models.CASCADE)
@@ -69,6 +71,11 @@ class comments(models.Model):
     comment_date=models.DateTimeField(auto_now_add=True)
     def __str__(self):
         return str(self.pk)+" | " + str(self.post) + " | " + str(self.user)
+"""
+class profile_link(models.Model):
+    people=models.ForeignKey(People,on_delete=models.CASCADE)
+    profile=models.ForeignKey(follow,on_delete=models.CASCADE)
+"""
     
 
     

@@ -28,16 +28,13 @@ def returndata(request):
     obj_fol=follow.objects.all()
     cmt_user=comments.objects.all()
     obj=obj.order_by('?')
-    u_prof={}
     #obj=obj[::-1]
     #print(request.user.get_full_name())
-    for i in obj_fol:
-        u_prof[i.user]=i
     if request.user.is_authenticated:
         fs=get_object_or_404(follow,user=request.user)
-        objs={'obj':obj,'loginuser':str(request.user),'fs':fs,'u_prof':u_prof,'cmt_user':cmt_user}
+        objs={'obj':obj,'loginuser':str(request.user),'fs':fs,'cmt_user':cmt_user}
     else:
-        objs={'obj':obj,'loginuser':str(request.user),'u_prof':u_prof}
+        objs={'obj':obj,'loginuser':str(request.user)}
     return render(request,'index.html',objs)
 def follow_data(request):
     people_obj=People.objects.all()
@@ -48,21 +45,19 @@ def follow_data(request):
     for i in people_obj: 
         if i.users in f.followed_users():
             obj.append(i)
-    u_prof={}
     obj=obj[::-1]
-    for i in obj_fol:
-        u_prof[i.user]=i
     if request.user.is_authenticated:
         fs=get_object_or_404(follow,user=request.user)
-        objs={'obj':obj,'loginuser':str(request.user),'fs':fs,'u_prof':u_prof,'cmt_user':cmt_user}
+        objs={'obj':obj,'loginuser':str(request.user),'fs':fs,'cmt_user':cmt_user}
     else:
-        objs={'obj':obj,'loginuser':str(request.user),'u_prof':u_prof}
+        objs={'obj':obj,'loginuser':str(request.user)}
     return render(request,'index.html',objs)
 def storingdata(request):
     #obj=People.objects.get()
     username=str(request.user)
     obs={'username':username}
     form=PeopleForm(initial=obs)
+    f=follow.objects.get(user=request.user)
     if request.method=='POST':
         form=PeopleForm(request.POST,request.FILES)
         if form.is_valid():
@@ -70,6 +65,7 @@ def storingdata(request):
             form=form.cleaned_data
             form['users']=request.user
             #form['profile']=profile['url']
+            form['follow']=f
             print(form)
             People.objects.create(**form)
             return HttpResponseRedirect(reverse('data'))
@@ -79,15 +75,13 @@ def sepcificview(request,my_id):
     obj=get_object_or_404(People,id=my_id)
     obj=[obj]
     obj_fol=follow.objects.all()
-    u_prof={}
     cmt_user=comments.objects.all()
-    for i in obj_fol:
-        u_prof[i.user]=i
     if request.user.is_authenticated:
         fs=get_object_or_404(follow,user=request.user)
-        contents={'obj':obj,'fs':fs,'u_prof':u_prof,'cmt_user':cmt_user}
+        suggestion(request,my_id)
+        contents={'obj':obj,'fs':fs,'cmt_user':cmt_user}
     else:
-        contents={'obj':obj,'u_prof':u_prof}
+        contents={'obj':obj}
     return render(request,'index.html',contents)
 def deleteview(request,my_id):
     obj=get_object_or_404(People,id=my_id)
@@ -98,14 +92,11 @@ def deleteview(request,my_id):
 def listingusers(request,my_username):
     obj=People.objects.filter(username=my_username)
     obj_fol=follow.objects.all()
-    u_prof={}
-    for i in obj_fol:
-        u_prof[i.user]=i
     if request.user.is_authenticated:
         fs=get_object_or_404(follow,user=request.user)
-        contents={'obj':obj,'fs':fs,'u_prof':u_prof}
+        contents={'obj':obj,'fs':fs}
     else:
-        contents={'obj':obj,'u_prof':u_prof}
+        contents={'obj':obj}
     return render(request,'index.html',contents)
 def signup(request):
     form=UserCreate()
@@ -121,8 +112,8 @@ def signup(request):
             u=User.objects.create_user(**form.cleaned_data)
             form1=form1.cleaned_data
             form=form.cleaned_data
-            follow.objects.create(user=u,profile=form1['profile'],description=form1['description'])
-            People.objects.create(username=form['username'],users=u,profile=form1['profile'],description=form1['description'])
+            f=follow.objects.create(user=u,profile=form1['profile'],description=form1['description'])
+            People.objects.create(username=form['username'],users=u,profile=form1['profile'],description=form1['description'],follow=f)
             return HttpResponseRedirect(reverse('login'))
     content={'forms':form,'form1':form1}
     return render(request,'signup.html',content)
@@ -132,7 +123,7 @@ def login(request):
         form=loginform(request.POST)
         if form.is_valid():
             user=auth.authenticate(**form.cleaned_data)
-            print(user,form.cleaned_data)
+            #print(user,form.cleaned_data)
             if user:
                 auth.login(request,user)
                 return HttpResponseRedirect(reverse('data'))
@@ -256,7 +247,6 @@ def discover(request):
     return render(request,'discover.html',obj)
 def search(request,hashtag):
     objs=People.objects.all()
-    fs=get_object_or_404(follow,user=request.user)
     cmt_user=comments.objects.all()
     obj=[]
     hashtag='#'+ hashtag.lower()
@@ -268,13 +258,58 @@ def search(request,hashtag):
     for cmt in cmt_user:
         if hashtag in cmt.comment and cmt.post not in obj:
             obj.append(cmt.post)
-    u_prof={}
     obj_fol=follow.objects.all()
-    for i in obj_fol:
-        u_prof[i.user]=i
-    objs={'obj':obj,'loginuser':str(request.user),'fs':fs,'u_prof':u_prof,'cmt_user':cmt_user}
-    #print(obj)
+    if request.user.is_authenticated:
+        fs=get_object_or_404(follow,user=request.user)
+        objs={'obj':obj,'loginuser':str(request.user),'fs':fs,'cmt_user':cmt_user}
+    else:
+        objs={'obj':obj}
     return render(request,'index.html',objs)
+import re
+def hashtagfinder(obj):
+    return re.findall(r'#(\w+)',obj)
+def suggestion(request,pk):
+    ob=get_object_or_404(People,id=pk)
+    post_comment=comments.objects.filter(post=ob)
+    hashtags=[]
+    prof=get_object_or_404(follow,user=request.user)
+    suggested_tag=prof.suggested_tag
+    if suggested_tag:
+        suggested_tag=prof.suggested_tag.split()
+    for cmt in post_comment:
+        hashtags=hashtags+hashtagfinder(cmt.comment)
+    if suggested_tag:
+        hashtags=hashtags+hashtagfinder(ob.description)+suggested_tag
+    else:
+        hashtags=hashtags+hashtagfinder(ob.description)
+    hashtags=" ".join(list(set(hashtags)))
+    prof.suggested_tag=hashtags
+    prof.save()
+    #print(prof.suggested_tag)
+    #return HttpResponseRedirect(reverse('data'))
+def my_profile(request):
+    id=People.objects.filter(users=request.user)[0].id
+    #print(suggest_discover(request,id))
+    return profiles(request,id)
+def suggest_discover(request,id):
+    post_obj=People.objects.filter(id=id)[0]
+    hashtag=hashtagfinder(post_obj.description)
+    post=People.objects.all()
+    obj=[]
+    for objs in post:
+        for tag in hashtag:
+            if '#'+tag in objs.description:
+                obj.append(objs)
+                break
+    if post_obj not in obj:
+        obj.append(post_obj)
+    print(post_obj)
+    fs=get_object_or_404(follow,user=request.user)
+    cmt_user=comments.objects.all()
+    objs={'obj':obj[::-1],'fs':fs,'cmt_user':cmt_user}
+    return render(request,'index.html',objs)
+
+
 
 
 
