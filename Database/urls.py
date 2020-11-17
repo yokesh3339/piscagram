@@ -35,8 +35,8 @@ from restltform.views import (
     discover,
     search,
     suggestion,
-    my_profile,
-    suggest_discover
+    suggest_discover,
+    returnall
     )
 
 urlpatterns = [
@@ -57,8 +57,8 @@ urlpatterns = [
     path('followsdata',follow_data,name="followsdata"),
     path('new-dis',discover,name="new-dis"),
     path('search/<str:hashtag>',search,name="search"),
-    path('myprofile',my_profile,name="myprofile"),
-    path('suggest_discover/<int:id>',suggest_discover,name="suggest_discover")
+    path('suggest_discover/<int:id>',suggest_discover,name="suggest_discover"),
+    path('returnall',returnall,name='returnall')
     
 ]
 #urlpatterns=urlpatterns+static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)

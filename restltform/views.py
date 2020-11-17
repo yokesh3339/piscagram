@@ -31,8 +31,8 @@ def returndata(request):
     #obj=obj[::-1]
     #print(request.user.get_full_name())
     if request.user.is_authenticated:
-        fs=get_object_or_404(follow,user=request.user)
-        objs={'obj':obj,'loginuser':str(request.user),'fs':fs,'cmt_user':cmt_user}
+       # fs=get_object_or_404(follow,user=request.user)
+        objs={'obj':obj,'loginuser':str(request.user),'cmt_user':cmt_user}
     else:
         objs={'obj':obj,'loginuser':str(request.user)}
     return render(request,'index.html',objs)
@@ -47,8 +47,8 @@ def follow_data(request):
             obj.append(i)
     obj=obj[::-1]
     if request.user.is_authenticated:
-        fs=get_object_or_404(follow,user=request.user)
-        objs={'obj':obj,'loginuser':str(request.user),'fs':fs,'cmt_user':cmt_user}
+        #fs=get_object_or_404(follow,user=request.user)
+        objs={'obj':obj,'loginuser':str(request.user),'cmt_user':cmt_user}
     else:
         objs={'obj':obj,'loginuser':str(request.user)}
     return render(request,'index.html',objs)
@@ -77,9 +77,9 @@ def sepcificview(request,my_id):
     obj_fol=follow.objects.all()
     cmt_user=comments.objects.all()
     if request.user.is_authenticated:
-        fs=get_object_or_404(follow,user=request.user)
+        #fs=get_object_or_404(follow,user=request.user)
         suggestion(request,my_id)
-        contents={'obj':obj,'fs':fs,'cmt_user':cmt_user}
+        contents={'obj':obj,'cmt_user':cmt_user}
     else:
         contents={'obj':obj}
     return render(request,'index.html',contents)
@@ -93,8 +93,8 @@ def listingusers(request,my_username):
     obj=People.objects.filter(username=my_username)
     obj_fol=follow.objects.all()
     if request.user.is_authenticated:
-        fs=get_object_or_404(follow,user=request.user)
-        contents={'obj':obj,'fs':fs}
+        #fs=get_object_or_404(follow,user=request.user)
+        contents={'obj':obj}
     else:
         contents={'obj':obj}
     return render(request,'index.html',contents)
@@ -109,9 +109,10 @@ def signup(request):
             if User.objects.filter(email=em).exists():
                 messages.info(request,"Email is already exists")
                 return redirect(reverse('sign-up'))
-            u=User.objects.create_user(**form.cleaned_data)
-            form1=form1.cleaned_data
             form=form.cleaned_data
+            form['username']=form['username'].lower()
+            u=User.objects.create_user(**form)
+            form1=form1.cleaned_data
             f=follow.objects.create(user=u,profile=form1['profile'],description=form1['description'])
             People.objects.create(username=form['username'],users=u,profile=form1['profile'],description=form1['description'],follow=f)
             return HttpResponseRedirect(reverse('login'))
@@ -200,18 +201,13 @@ def follows(request,pk):
     return HttpResponse(response1,content_type="application/json")
 
 def profiles(request,pk):
-    ob=get_object_or_404(People,id=pk)
-    fs=get_object_or_404(follow,user=request.user)
-    f2=get_object_or_404(follow,user=ob.users)
+    ob=get_object_or_404(User,id=pk)
+    #f2=get_object_or_404(follow,user=ob.users)
     #print(ob.users == f2.user)
-    user_post=People.objects.filter(users=ob.users)
-    print(user_post)
+    #user_post=People.objects.filter(users=ob.users)
+    #print(user_post)
     obj={
-        'fs':fs,
         'ob':ob,
-        'f1':str(ob.username),
-        'f2':f2,
-        'user_post':user_post
     }
     return render(request,'profile1.html',obj)
 def comment_post(request,pk):
@@ -260,8 +256,8 @@ def search(request,hashtag):
             obj.append(cmt.post)
     obj_fol=follow.objects.all()
     if request.user.is_authenticated:
-        fs=get_object_or_404(follow,user=request.user)
-        objs={'obj':obj,'loginuser':str(request.user),'fs':fs,'cmt_user':cmt_user}
+        #fs=get_object_or_404(follow,user=request.user)
+        objs={'obj':obj,'loginuser':str(request.user),'cmt_user':cmt_user}
     else:
         objs={'obj':obj}
     return render(request,'index.html',objs)
@@ -287,10 +283,6 @@ def suggestion(request,pk):
     prof.save()
     #print(prof.suggested_tag)
     #return HttpResponseRedirect(reverse('data'))
-def my_profile(request):
-    id=People.objects.filter(users=request.user)[0].id
-    #print(suggest_discover(request,id))
-    return profiles(request,id)
 def suggest_discover(request,id):
     post_obj=People.objects.filter(id=id)[0]
     hashtag=hashtagfinder(post_obj.description)
@@ -304,11 +296,20 @@ def suggest_discover(request,id):
     if post_obj not in obj:
         obj.append(post_obj)
     print(post_obj)
-    fs=get_object_or_404(follow,user=request.user)
+    #fs=get_object_or_404(follow,user=request.user)
     cmt_user=comments.objects.all()
-    objs={'obj':obj[::-1],'fs':fs,'cmt_user':cmt_user}
+    objs={'obj':obj[::-1],'cmt_user':cmt_user}
     return render(request,'index.html',objs)
 
+def returnall(request):
+    obj=People.objects.all()[0]
+    from django.core import serializers
+    response=serializers.serialize("json", People.objects.all())
+    response={
+        'data':response
+    }
+    response1=json.dumps(response)
+    return HttpResponse(response1,content_type="application/json")
 
 
 

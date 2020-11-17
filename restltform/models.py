@@ -6,7 +6,7 @@ from cloudinary.models import CloudinaryField
 # Create your models here.
 """ user profile model"""
 class follow(models.Model):
-    user=models.OneToOneField(User,on_delete=models.CASCADE)
+    user=models.OneToOneField(User,related_name="profile_user",on_delete=models.CASCADE)
     followers_users=models.ManyToManyField(User,related_name='followers',blank=True)
     following_users=models.ManyToManyField(User,related_name='followings',blank=True)
     description=models.TextField(max_length=100,blank=True,null=True,default="No Description Available")
@@ -31,7 +31,7 @@ class People(models.Model):
     username=models.CharField(max_length=20)
     #firstname=models.CharField(max_length=50)
     #lastname=models.CharField(max_length=50)
-    users=models.ForeignKey(User,on_delete=models.CASCADE)
+    users=models.ForeignKey(User,related_name="post_user",on_delete=models.CASCADE)
     description=models.TextField(max_length=100,blank=True,null=True,default="No Description Available")
     #profile=models.ImageField(upload_to='pics',blank=True,default="profiles/default.jpg")
     profile=CloudinaryField('profile')

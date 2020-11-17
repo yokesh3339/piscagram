@@ -93,7 +93,7 @@
           </svg>
         </a>
         <div class="dropdown-menu dropdown-menu-lg-right">
-          <a href="{% url 'myprofile' %}" class="dropdown-item" type="button">My profile</a>
+          <a href="{% url 'profiles' request.user.pk %}" class="dropdown-item" type="button">My profile</a>
           <div class="dropdown-divider"></div>
           <a href="{% url 'logout' %}" class="dropdown-item" type="button">Logout</a>
         </div>
