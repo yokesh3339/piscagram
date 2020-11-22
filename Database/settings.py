@@ -27,8 +27,8 @@ SECRET_KEY = '%yu%(=*^u8us)td8314wv$m#&3co)u8744zatv$zkjd_-57%=n'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG=True
-#ALLOWED_HOSTS = ['127.0.0.1']
-ALLOWED_HOSTS = ['picsagram-app.herokuapp.com']
+#ALLOWED_HOSTS = ['localhost','127.0.0.1']
+ALLOWED_HOSTS = ['picsagram-app.herokuapp.com','127.0.0.1']
 
 #'picsagram-app.herokuapp.com'
 #AUTH_USER_MODEL = 'restltform.follow' 
@@ -43,7 +43,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'cloudinary',
     'restltform',
-    'uploadform'
+    'uploadform',
+    'chat',
+    'channels',
 ]
 
 MIDDLEWARE = [
@@ -76,8 +78,15 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'Database.wsgi.application'
-
-
+ASGI_APPLICATION = 'Database.asgi.application'
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('127.0.0.1', 6379)],
+        },
+    },
+}
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 

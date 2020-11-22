@@ -14,7 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path,include
 from django.conf import settings
 from django.conf.urls.static import static
 from restltform.views import (
@@ -36,7 +36,8 @@ from restltform.views import (
     search,
     suggestion,
     suggest_discover,
-    returnall
+    returnall,
+    chat_dashboard,
     )
 
 urlpatterns = [
@@ -58,7 +59,12 @@ urlpatterns = [
     path('new-dis',discover,name="new-dis"),
     path('search/<str:hashtag>',search,name="search"),
     path('suggest_discover/<int:id>',suggest_discover,name="suggest_discover"),
-    path('returnall',returnall,name='returnall')
+    path('returnall',returnall,name='returnall'),
+    path('chat_dashboard',chat_dashboard,name="c_board"),
     
+    
+]
+urlpatterns = urlpatterns+[
+    path('chat/', include('chat.urls', namespace='chat')),
 ]
 #urlpatterns=urlpatterns+static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)

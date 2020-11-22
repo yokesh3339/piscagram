@@ -10,22 +10,20 @@
                             class="rounded mb-2 img-thumbnail"><a href="#" class=""></a></div>
                     <div class="media-body mb-5 text-white">
                         <h4 class="mt-0 mb-0">{{ob.username}}</h4>
-                        <p class="small mb-4"> <i class="fas fa-map-marker-alt mr-2"></i>{{ob.get_full_name}}</p>
+                        <p class="small mb-4">{{ob.get_full_name}}</p>
                     </div>
                 </div>
             </div>
             <div class="bg-light p-4 d-flex justify-content-end text-center">
                 <ul class="list-inline mb-0">
                     <li class="list-inline-item">
-                        <h5 class="font-weight-bold mb-0 d-block">{{ob.post_user.count}}</h5><small class="text-muted"> <i
-                                class="fas fa-image mr-1"></i>Photos</small>
+                        <h5 class="font-weight-bold mb-0 d-block">{{ob.post_user.count}}</h5><small class="text-muted">Photos</small>
                     </li>
                     <li class="list-inline-item">
                         <div class="dropleft" id="followers">
                             <h5 class="font-weight-bold mb-0 d-block">{{ob.profile_user.followers_users.count}}</h5>
                             <small class="text-muted followedprofcount" type="button" id="dropdownMenuButton"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i
-                                    class="fas fa-user mr-1"></i>
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 
                                 Followers
                             </small>
@@ -43,8 +41,7 @@
                         <h5 class="font-weight-bold mb-0 d-block">{{ob.profile_user.followed_users.count}}</h5>
                         <div class="dropleft" id='followings'>
                             <small class="text-muted followedprofcount" type="button" id="dropdownMenuButton"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i
-                                    class="fas fa-user mr-1"></i>
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 
                                 Followings
                             </small>

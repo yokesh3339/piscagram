@@ -12,6 +12,7 @@ import random
 import cloudinary
 import cloudinary.uploader
 import cloudinary.api
+from django.contrib.auth.decorators import login_required
 #obj.likes_users.filter(username='sample_user2').exists()
 # Create your views here.
 def returndata(request):
@@ -36,6 +37,7 @@ def returndata(request):
     else:
         objs={'obj':obj,'loginuser':str(request.user)}
     return render(request,'index.html',objs)
+@login_required
 def follow_data(request):
     people_obj=People.objects.all()
     obj_fol=follow.objects.all()
@@ -52,6 +54,7 @@ def follow_data(request):
     else:
         objs={'obj':obj,'loginuser':str(request.user)}
     return render(request,'index.html',objs)
+@login_required
 def storingdata(request):
     #obj=People.objects.get()
     username=str(request.user)
@@ -83,6 +86,7 @@ def sepcificview(request,my_id):
     else:
         contents={'obj':obj}
     return render(request,'index.html',contents)
+@login_required
 def deleteview(request,my_id):
     obj=get_object_or_404(People,id=my_id)
     if request.method=="POST":
@@ -134,7 +138,8 @@ def login(request):
 
     return render(request,'login.html',content)
 #def getusernames(request):
- #   return str(request.user)
+#   return str(request.user)
+@login_required
 def updatedata(request,pk):
     obj=get_object_or_404(People,id=pk)
     form=PeopleForm(request.POST or None,request.FILES or None,instance=obj)
@@ -143,9 +148,11 @@ def updatedata(request,pk):
         return HttpResponseRedirect(reverse('data'))
     content={'forms':form}
     return render(request,'datacollect.html',content)
+@login_required
 def logout(request):
     auth.logout(request)
     return redirect('/')
+@login_required
 def liked(request,pk):
     ob=get_object_or_404(People,id=pk)
     #ob.likes_users.add(request.user)
@@ -170,7 +177,7 @@ def liked(request,pk):
     response=json.dumps(resp)
 
     return HttpResponse(response,content_type="application/json")
-
+@login_required
 def follows(request,pk):
     ob=get_object_or_404(People,id=pk)
     f1=get_object_or_404(follow,user=ob.users)
@@ -199,7 +206,7 @@ def follows(request,pk):
     response1=json.dumps(resp)
 
     return HttpResponse(response1,content_type="application/json")
-
+@login_required
 def profiles(request,pk):
     ob=get_object_or_404(User,id=pk)
     #f2=get_object_or_404(follow,user=ob.users)
@@ -210,6 +217,7 @@ def profiles(request,pk):
         'ob':ob,
     }
     return render(request,'profile1.html',obj)
+@login_required
 def comment_post(request,pk):
     cmt=request.POST['comments_by_user']
     obj_post=get_object_or_404(People,id=pk)
@@ -264,6 +272,7 @@ def search(request,hashtag):
 import re
 def hashtagfinder(obj):
     return re.findall(r'#(\w+)',obj)
+@login_required
 def suggestion(request,pk):
     ob=get_object_or_404(People,id=pk)
     post_comment=comments.objects.filter(post=ob)
@@ -283,6 +292,7 @@ def suggestion(request,pk):
     prof.save()
     #print(prof.suggested_tag)
     #return HttpResponseRedirect(reverse('data'))
+@login_required
 def suggest_discover(request,id):
     post_obj=People.objects.filter(id=id)[0]
     hashtag=hashtagfinder(post_obj.description)
@@ -310,7 +320,24 @@ def returnall(request):
     }
     response1=json.dumps(response)
     return HttpResponse(response1,content_type="application/json")
-
-
-
-
+@login_required
+def chat_dashboard(request):
+    objs=People.objects.all()
+    followers=request.user.profile_user.followers_users.all()
+    followings=request.user.profile_user.following_users.all()
+    followings=followings.union(followers)
+    objs={
+        'obj':objs,
+        'followings':followings
+    }
+    return render(request,'chat_dashboard.html',objs)
+@login_required
+def chat(request,id):
+    objs=People.objects.all()
+    chat_user=get_object_or_404(User,id=id)
+    print(chat_user)
+    objs={
+        'obj':objs,
+        'chat_user':chat_user
+    }
+    return render(request,'chat.html',objs)
