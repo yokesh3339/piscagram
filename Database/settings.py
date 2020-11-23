@@ -79,23 +79,16 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'Database.wsgi.application'
 ASGI_APPLICATION = 'Database.asgi.application'
-""" CHANNEL_LAYERS = {
+CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
             "hosts": [os.environ.get('REDIS_URL','redis://localhost:6379')],
         },
     },
-} """
-CHANNEL_LAYERS = {
-    'default': {
-        'BACKEND': 'channels_redis.core.RedisChannelLayer',
-        'CONFIG': {
-            "hosts": [('picsagram-chat.herokuapp.com',6379)]
-        },
-    },
 }
-""" CACHES={
+
+CACHES={
     "default":{
         "BACKEND":"django_redis.cache.RedisCache",
         "LOCATION":[os.environ.get('REDIS_URL','redis://localhost:6379')],
@@ -104,7 +97,7 @@ CHANNEL_LAYERS = {
 
         }
     }
-} """
+}
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
