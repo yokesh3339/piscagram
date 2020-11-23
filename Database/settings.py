@@ -28,7 +28,7 @@ SECRET_KEY = '%yu%(=*^u8us)td8314wv$m#&3co)u8744zatv$zkjd_-57%=n'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG=True
 #ALLOWED_HOSTS = ['localhost','127.0.0.1']
-ALLOWED_HOSTS = ['picsagram-chat.herokuapp.com','127.0.0.1','localhost']
+ALLOWED_HOSTS = ['picsagram-chat.herokuapp.com','127.0.0.1']
 
 #'picsagram-app.herokuapp.com'
 #AUTH_USER_MODEL = 'restltform.follow' 
@@ -93,7 +93,7 @@ CACHES={
         "BACKEND":"django_redis.cache.RedisCache",
         "LOCATION":[os.environ.get('REDIS_URL','redis://localhost:6379')],
         "OPTIONS":{
-            "CLIENT_CLASSES":"django_redis.client.DefaultClient"
+            "CLIENT_CLASSES":
 
         }
     }
