@@ -132,7 +132,7 @@ Website: http://emilcarlsson.se/
 	<script>
 		var roomName = "{{ room_name }}";
 		var username = "{{ username }}";
-		console.log(roomName);
+		console.log(window.location.host);
 		const chatSocket = new ReconnectingWebSocket(
 			'ws://'
 			+ window.location.host
