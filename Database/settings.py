@@ -91,7 +91,7 @@ CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            "hosts": ('picsagram-chat.herokuapp.com',6379)]
+            "hosts": [('picsagram-chat.herokuapp.com',6379)]
         },
     },
 }
