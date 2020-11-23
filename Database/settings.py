@@ -79,19 +79,20 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'Database.wsgi.application'
 ASGI_APPLICATION = 'Database.asgi.application'
+redis_host = os.environ.get('REDIS_HOST', 'localhost')
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            "hosts": [os.environ.get('REDISCLOUD_URL','redis://localhost:6379')],
+            "hosts": [(redis_host,6379)],
         },
     },
 }
-
+#os.environ.get('REDIS_URL','redis://localhost:6379')
 CACHES={
     "default":{
         "BACKEND":"django_redis.cache.RedisCache",
-        "LOCATION":[os.environ.get('REDISCLOUD_URL','redis://localhost:6379')],
+        "LOCATION":[(redis_host,6379)],
         "OPTIONS":{
             "CLIENT_CLASS":"django_redis.client.DefaultClient"
 
