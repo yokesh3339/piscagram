@@ -203,6 +203,7 @@ Website: http://emilcarlsson.se/
 			msgListTag.appendChild(imgTab);
 			msgListTag.appendChild(pTag);
 			document.querySelector('#chat-log').appendChild(msgListTag);
+			$(".messages").animate({ scrollTop: $(document).height() }, "fast");
 		}
 	</script>
 </body>
