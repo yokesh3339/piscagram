@@ -126,6 +126,7 @@ body {
   #frame #sidepanel #profile .wrap i.expand-button {
     float: right;
     margin-top: 23px;
+    font-size: 0.8em;
     cursor: pointer;
     color: #435f7a;
   }
@@ -348,7 +349,6 @@ body {
   #frame #sidepanel #contacts ul li.contact {
     position: relative;
     padding: 10px 0 15px 0;
-    font-size: 0.9em;
     cursor: pointer;
   }
   @media screen and (max-width: 735px) {

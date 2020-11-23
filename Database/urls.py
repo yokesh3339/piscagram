@@ -38,6 +38,7 @@ from restltform.views import (
     suggest_discover,
     returnall,
     chat_dashboard,
+    chat
     )
 
 urlpatterns = [
@@ -61,6 +62,7 @@ urlpatterns = [
     path('suggest_discover/<int:id>',suggest_discover,name="suggest_discover"),
     path('returnall',returnall,name='returnall'),
     path('chat_dashboard',chat_dashboard,name="c_board"),
+    path('chatt/<int:id>',chat,name="chatt")
     
     
 ]

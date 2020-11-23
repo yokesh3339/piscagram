@@ -11,6 +11,7 @@ body {
     text-rendering: optimizeLegibility;
     text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.004);
     -webkit-font-smoothing: antialiased;
+    font-size: 1.5rem;
   }
   
   #frame {
@@ -125,7 +126,6 @@ body {
   #frame #sidepanel #profile .wrap i.expand-button {
     float: right;
     margin-top: 23px;
-    font-size: 0.8em;
     cursor: pointer;
     color: #435f7a;
   }
