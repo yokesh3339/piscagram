@@ -77,7 +77,9 @@ TEMPLATES = [
     },
 ]
 
+import redis
 
+r = redis.from_url(os.environ.get("REDIS_URL",'redis://localhost:6379'))
 
 WSGI_APPLICATION = 'Database.wsgi.application'
 ASGI_APPLICATION = 'Database.asgi.application'
