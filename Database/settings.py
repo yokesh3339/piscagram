@@ -77,9 +77,11 @@ TEMPLATES = [
     },
 ]
 
+
+
 WSGI_APPLICATION = 'Database.wsgi.application'
 ASGI_APPLICATION = 'Database.asgi.application'
-redis_host = os.environ.get('REDIS_HOST', 'localhost')
+""" redis_host = os.environ.get('REDIS_HOST', 'localhost') """
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
@@ -89,17 +91,12 @@ CHANNEL_LAYERS = {
     },
 }
 #os.environ.get('REDIS_URL','redis://localhost:6379')
-CACHES={
-    "default":{
-        "BACKEND":"django_redis.cache.RedisCache",
-        "LOCATION":[os.environ.get('REDIS_URL','redis://localhost:6379')],
-        "OPTIONS":{
-            "CLIENT_CLASS":"django_redis.client.DefaultClient"
-
-        }
+CACHES = {
+    "default": {
+         "BACKEND": "redis_cache.RedisCache",
+         "LOCATION": os.environ.get('REDIS_URL'),
     }
 }
-
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
